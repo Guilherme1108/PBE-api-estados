@@ -94,8 +94,17 @@ app.get('/v1/capitais', function (request, response){
         response.json(capital)
 })
 
+app.get('/v1/cidades/:uf', function (request, response){
+    let sigla = request.params.uf
+    let cidades = dados.getCidadesBySigla(sigla)
 
+            //Retorna o status code
+            response.status(cidades.status_code)
 
+            //Retorna o JSON
+            response.json(cidades)
+
+})
 
 //Start na API
 app.listen(PORT, function () {

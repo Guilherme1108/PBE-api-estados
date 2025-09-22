@@ -132,10 +132,8 @@ const getEstadosByRegiao = function (regiao) {
             message.estado = {
                 uf: estadoEncontrado.sigla,
                 descricao: estadoEncontrado.nome,
-                quantidade: estadoEncontrado.cidades.length,
-                cidades: [
-                    dados.listaDeEstados
-                ]
+                quantidade_cidades: estadoEncontrado.cidades.length,
+                cidades: estadoEncontrado.cidades.map(cidade => cidade.nome) //o map pescorre o array e cria um novo só com os nomes
             }
             return message //Verdadeira 200
         } else {
@@ -151,5 +149,6 @@ const getEstadosByRegiao = function (regiao) {
         getEstadoBySigla,
         getCapitalBySigla,
         getEstadosByRegiao,
-        getVerifyCapitaisDoPais
+        getVerifyCapitaisDoPais,
+        getCidadesBySigla
     }
