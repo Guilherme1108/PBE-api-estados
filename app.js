@@ -11,12 +11,12 @@
  ***************************************************************************************************************************/
 
 //Import das dependencias da API
-const express    = require('express')     //Responsavel pela API
-const cors       = require('cors')        //Responsavel pelas permissões da API
+const express = require('express')     //Responsavel pela API
+const cors = require('cors')        //Responsavel pelas permissões da API
 const bodyParser = require('body-parser') //Respnsavel por gerenciar a chegada dos dados da API com o front
 
 //Import do arquivo de funções
-const dados      = require('./modulo/funcoes.js')
+const dados = require('./modulo/funcoes.js')
 
 //Retorna a porta do servidor atual ou colocamos uma porta local
 const PORT = process.PORT || 8080
@@ -26,8 +26,8 @@ const app = express()
 
 //Configuração de permissões
 app.use((request, response, next) => {
-    response.header('Acces-Control-Allow-Origin','*')    //Servidor de origem da API
-    response.header('Acces-Control-Allow-Methods','GET') //verbos permitidos / para adicionar mais métodos separar por , dentro da mesma aspas
+    response.header('Acces-Control-Allow-Origin', '*')    //Servidor de origem da API
+    response.header('Acces-Control-Allow-Methods', 'GET') //verbos permitidos / para adicionar mais métodos separar por , dentro da mesma aspas
     //carrega as configurações no cors da API 
     app.use(cors())
     next() // proximo, carregar os proximos endpoints
@@ -37,51 +37,67 @@ app.use((request, response, next) => {
 //response -> retorno de dados na API
 
 //ENDPOINTS
-app.get('/v1/estados', function(request, response){
+app.get('/v1/estados', function (request, response) {
     //Pesquisa na função de estados  
     let estados = dados.getAllEstados()
 
-    //Retrna o status code
+    //Retorna o status code
     response.status(estados.status_code)
-    
+
     //Retorna o JSON
     response.json(estados)
 })
 
-app.get('/v1/estado/:uf', function(request, response){
+app.get('/v1/estado/:uf', function (request, response) {
     let sigla = request.params.uf
     let estado = dados.getEstadoBySigla(sigla)
 
-        //Retrna o status code
-        response.status(estado.status_code)
-    
-        //Retorna o JSON
-        response.json(estado)
+    //Retorna o status code
+    response.status(estado.status_code)
+
+    //Retorna o JSON
+    response.json(estado)
 })
 
-app.get('/v1/estado/regiao/:uf'), function (request, response){
+app.get('/v1/estado/capital/:uf', function (request, response) {
     let sigla = request.params.uf
     let estado = dados.getCapitalBySigla(sigla)
 
-            //Retrna o status code
-            response.status(estado.status_code)
-    
-            //Retorna o JSON
-            response.json(estado)
-}
+    //Retorna o status code
+    response.status(estado.status_code)
+
+    //Retorna o JSON
+    response.json(estado)
+})
 
 
 
 
-app.get('/v1/estados/regiao', function (request, response){
-    let sigla = request.query.uf
-    console.log(sigla)
+app.get('/v1/estados/regiao', function (request, response) {
+    let regiao = request.query.uf
+    let estado = dados.getEstadosByRegiao(regiao)
+
+    //Retorna o status code
+    response.status(estado.status_code)
+
+    //Retorna o JSON
+    response.json(estado)
+})
+
+app.get('/v1/capitais', function (request, response){
+    let capital = dados.getVerifyCapitaisDoPais()
+
+        //Retorna o status code
+        response.status(capital.status_code)
+
+        //Retorna o JSON
+        response.json(capital)
 })
 
 
 
 
 //Start na API
-app.listen(PORT, function(){
+app.listen(PORT, function () {
     console.log('API aguardando requisições ....')
 })

@@ -73,28 +73,83 @@ const getCapitalBySigla = function (sigla) {
     } else {
         return MESSAGE_ERRO //Falsa 500
     }
-    
+
 }
 
 //Retorna uma lista de estados pesqusiando pela região
 const getEstadosByRegiao = function (regiao) {
+    let message = { status: true, status_code: 200, development: 'Guilherme Moreira', regiao: regiao, estados: [] }
 
+    dados.listaDeEstados.estados.forEach(estado => {
+        if (estado.regiao === regiao) {
+            message.estados.push({
+                uf: estado.sigla,
+                descricao: estado.nome
+            })
+        }
+    })
+
+    if (message.estados.length > 0) {
+        return message
+    } else {
+        return MESSAGE_ERRO
+    }
 }
+    //Retorna uma lista de estados referente as capitias do país
+    const getVerifyCapitaisDoPais = function () {
+        let message = { status: true, status_code: 200, development: 'Guilherme Moreira', capitais: [] }
 
-//Retorna uma lista de estados referente as capitias do país
-const getVerifyCapitaisDoPais = function () {
+        dados.listaDeEstados.estados.forEach(capital => {
+            if (capital.capital_pais) {
+                message.capitais.push({
+                    capital_atual: capital.capital_pais.capital,
+                    uf: capital.sigla,
+                    descricao: capital.nome,
+                    capital: capital.capital,
+                    regiao: capital.regiao,
+                    capital_pais_ano_inicio: capital.capital_pais.ano_inicio,
+                    capital_pais_ano_termino: capital.capital_pais.ano_fim
+                })
+            }
+        })
 
-}
+        if (message.capitais.length > 0) {
+            return message
+        } else {
+            return MESSAGE_ERRO
+        }
+    }
+    //Retorna uma lista de cidades pesquisando pela sigla do estado
+    const getCidadesBySigla = function (sigla) {
+        
+        let siglaFormatada = String(sigla).toUpperCase()
 
-//Retorna uma lista de cidades pesquisando pela sigla do estado
-const getCidadesBySigla = function (sigla) {
+        let message = { status: true, status_code: 200, development: 'Guilherme Moreira', estado: {} }
+    
+        const estadoEncontrado = dados.listaDeEstados.estados.find(item => item.sigla === siglaFormatada)
+    
+        if (estadoEncontrado) {
+            message.estado = {
+                uf: estadoEncontrado.sigla,
+                descricao: estadoEncontrado.nome,
+                quantidade: estadoEncontrado.cidades.length,
+                cidades: [
+                    dados.listaDeEstados
+                ]
+            }
+            return message //Verdadeira 200
+        } else {
+            return MESSAGE_ERRO //Falsa 500
+        }
+    
+    }
 
-}
+    // console.log(getAllEstados())
 
-// console.log(getAllEstados())
-
-module.exports = {
-    getAllEstados,
-    getEstadoBySigla,
-    getCapitalBySigla
-}
+    module.exports = {
+        getAllEstados,
+        getEstadoBySigla,
+        getCapitalBySigla,
+        getEstadosByRegiao,
+        getVerifyCapitaisDoPais
+    }
